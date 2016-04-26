@@ -1,0 +1,4 @@
+package: taskManager
+import:
+- package: github.com/gorilla/mux
+- package: github.com/lib/pq
