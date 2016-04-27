@@ -111,10 +111,10 @@ var updateTask = function(params){
 
 }
 
-
 var getTaskLists = function(player){
 	$.get("/getAllTasks","getAllTasks",function(data,status){
 		if(status == "success"){
+		    console.log(data);
             rowData = JSON.parse(data);
             rowData.forEach(function(each){
                 each.delete = " <td><div class='deleteTask' id="+each.TASKID+ "> ✗ </div>"

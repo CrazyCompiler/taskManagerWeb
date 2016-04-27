@@ -5,9 +5,11 @@ import (
 	"net/http"
 	"io/ioutil"
 	"taskManagerWeb/errorHandler"
-	"net/url"
-	"mime/multipart"
 	"fmt"
+	"github.com/golang/protobuf/proto"
+	"bytes"
+	"github.com/CrazyCompiler/taskManagerContract"
+	"strconv"
 )
 
 func Get(configObject config.ContextObject) []byte {
@@ -16,20 +18,31 @@ func Get(configObject config.ContextObject) []byte {
 	resp, err := client.Do(request)
 	if err != nil {
 		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
+		return nil
 	}
-	defer resp.Body.Close()
-
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
+	}
 	return  body
 }
 
 func Add(configObject config.ContextObject,task string, priority string)error {
-	_, err := http.PostForm("http://"+configObject.ServerAddress+"/addTask", url.Values{"task": {task}, "priority": {priority}})
+	data := &contract.AddTask{}
+	data.Task = &task
+	data.Priority = &priority
+	dataToBeSend,err :=  proto.Marshal(data)
 	if err != nil {
 		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-		return err
 	}
-	return nil
+	request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress+"/addTask",bytes.NewBuffer(dataToBeSend))
+	if err != nil {
+		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
+	}
+	client := &http.Client{}
+	_, err = client.Do(request)
+
+	return  err
 }
 
 func Delete(configObject config.ContextObject,URI string) error{
@@ -40,35 +53,76 @@ func Delete(configObject config.ContextObject,URI string) error{
 }
 
 func UpdatePriority(configObject config.ContextObject,taskId string, priority string)error {
-	_, err := http.PostForm("http://"+configObject.ServerAddress+"/updatePriority", url.Values{"taskId": {taskId}, "priority": {priority}})
+	id,err := strconv.Atoi(taskId)
+	convertedTaskId := int32(id)
 	if err != nil {
 		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-		return err
 	}
-	return nil
-}
+	data := &contract.UpdatePriority{}
+	data.TaskId = &convertedTaskId
+	data.Priority = &priority
 
-func UpdateDescription(configObject config.ContextObject,taskId string, data string)error {
-	_, err := http.PostForm("http://"+configObject.ServerAddress+"/updateTaskDescription", url.Values{"taskId": {taskId}, "data": {data}})
+	dataToBeSend,err :=  proto.Marshal(data)
 	if err != nil {
-		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-		return err
+		fmt.Println("error :",err.Error())
 	}
-	return nil
-}
 
-func UploadCsv(configObject config.ContextObject, multiform *multipart.Form)error{
-	//file := multiform.File
-	request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress + "/uploadCsv",nil)
-	fmt.Println("file contents:",multiform.File["uploadFile"])
-	request.MultipartForm = multiform
+	request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress+"/updatePriority",bytes.NewBuffer(dataToBeSend))
 	client := &http.Client{}
-	resp, err := client.Do(request)
+	_, err = client.Do(request)
+	return  err
+}
+
+func UpdateDescription(configObject config.ContextObject,taskId string, taskDescription string)error {
+	id,err := strconv.Atoi(taskId)
+	convertedTaskId := int32(id)
 	if err != nil {
 		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
 	}
-	defer resp.Body.Close()
+	data := &contract.UpdateTaskDescription{}
+	data.TaskId = &convertedTaskId
+	data.Data = &taskDescription
 
-	_, err = ioutil.ReadAll(resp.Body)
+	dataToBeSend,err :=  proto.Marshal(data)
+	if err != nil {
+		fmt.Println("error :",err.Error())
+	}
+
+	request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress+"/updateTaskDescription",bytes.NewBuffer(dataToBeSend))
+	client := &http.Client{}
+	_, err = client.Do(request)
 	return  err
+}
+
+func AddTaskByCsv(configObject config.ContextObject, csvFileData string)error{
+
+	data := &contract.UploadCsvData{}
+	data.CsvData = &csvFileData
+	dataToBeSend,err :=  proto.Marshal(data)
+	if err != nil {
+		fmt.Println("error :",err.Error())
+	}
+
+	request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress + "/uploadCsv",bytes.NewBuffer(dataToBeSend))
+	client := &http.Client{}
+	_, err = client.Do(request)
+	return  err
+
+
+
+
+
+	//file := multiform.File
+	//request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress + "/uploadCsv",nil)
+	//fmt.Println("file contents:",multiform.File["uploadFile"])
+	//request.MultipartForm = multiform
+	//client := &http.Client{}
+	//resp, err := client.Do(request)
+	//if err != nil {
+	//	errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
+	//}
+	//defer resp.Body.Close()
+	//
+	//_, err = ioutil.ReadAll(resp.Body)
+	//return  err
 }

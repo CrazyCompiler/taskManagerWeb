@@ -1,4 +1,8 @@
-package: taskManager
+package: taskManagerWeb
 import:
 - package: github.com/gorilla/mux
 - package: github.com/lib/pq
+- package: github.com/CrazyCompiler/taskManagerContract
+- package: github.com/afex/hystrix-go
+  subpackages:
+  - hystrix
