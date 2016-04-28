@@ -3,7 +3,7 @@ var addTask = function(){
     var priority = $('#priority').val();
     if(task != ""){
         var data = "task="+task+"&priority="+priority;
-        $.post("/addTask",data,function(data,status){
+        $.post("/task",data,function(data,status){
             if(status == "success"){
                  getTaskLists();
             }
@@ -15,9 +15,18 @@ var addTask = function(){
 
 var setSelectionOptions = ['High','Medium','Low'];
 
-var updatePriority = function(taskId,dataToBeUpDated,params){
-    data = "taskId="+taskId+"&priority="+dataToBeUpDated;
-    $.post("/updatePriority",data,function(data,status){
+var updateTask = function(params){
+     data = "taskId="+params.data.TASKID+"&data="+params.newValue+"&priority="+params.data.PRIORITY;
+        $.post("/update",data,function(data,status){
+            if(status == "success"){
+                getTaskLists();
+            }
+        })
+}
+
+var updatePriority = function(params,dataToBeUpDated){
+    data = "taskId="+params.data.TASKID+"&data="+params.data.TASK+"&priority="+dataToBeUpDated;
+    $.post("/update",data,function(data,status){
         if(status == "success"){
         }
     })
@@ -60,7 +69,7 @@ var customEditor = function(params) {
         if (editing) {
             editing = false;
             var newValue = eSelect.value;
-            updatePriority(params.data.TASKID,newValue);
+            updatePriority(params,newValue);
             params.data[params.colDef.field] = newValue;
             eLabel.nodeValue = newValue;
             eCell.removeChild(eSelect);
@@ -100,21 +109,9 @@ var displayData = function(data){
             gridOptions.api.sizeColumnsToFit();
 }
 
-
-var updateTask = function(params){
-     data = "taskId="+params.data.TASKID+"&data="+params.newValue;
-        $.post("/updateTaskDescription",data,function(data,status){
-            if(status == "success"){
-                getTaskLists();
-            }
-        })
-
-}
-
 var getTaskLists = function(player){
-	$.get("/getAllTasks","getAllTasks",function(data,status){
+	$.get("/tasks","getAllTasks",function(data,status){
 		if(status == "success"){
-		    console.log(data);
             rowData = JSON.parse(data);
             rowData.forEach(function(each){
                 each.delete = " <td><div class='deleteTask' id="+each.TASKID+ "> ✗ </div>"
@@ -127,7 +124,7 @@ var getTaskLists = function(player){
 var deleteTask = function(params){
     var dataToBeSend = {taskId:params.data.TASKID};
       $.ajax({
-        url: "/deleteTask/"+params.data.TASKID,
+        url: "/task/"+params.data.TASKID,
         type: 'DELETE',
         data: dataToBeSend,
         traditional: true,
@@ -141,7 +138,7 @@ var deleteTask = function(params){
 var uploadCsv = function(){
     var formData = new FormData($(this)[0]);
      $.ajax({
-            url: "uploadCsv",
+            url: "tasks/csv",
             type: 'POST',
             data: formData,
             async: false,

@@ -14,18 +14,21 @@ const TIMEOUT int = 1000
 const MAXCONCURRENTREQUESTS int = 100
 const ERRORPERCENTTHRESHOLD int = 25
 
+func configureHystrix(){
+	hystrix.ConfigureCommand("task", hystrix.CommandConfig{
+		Timeout: TIMEOUT,
+		MaxConcurrentRequests: MAXCONCURRENTREQUESTS,
+		ErrorPercentThreshold: ERRORPERCENTTHRESHOLD,
+	})
+}
+
 func GetTasks(configObject config.ContextObject) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		rows := make(chan []byte, 1)
 		status := make(chan int, 1)
+		configureHystrix()
 
-		hystrix.ConfigureCommand("getTask", hystrix.CommandConfig{
-			Timeout: TIMEOUT,
-			MaxConcurrentRequests: MAXCONCURRENTREQUESTS,
-			ErrorPercentThreshold: ERRORPERCENTTHRESHOLD,
-		})
-
-		hystrix.Go("getTask", func() error {
+		hystrix.Go("task", func() error {
 			rows <- models.Get(configObject)
 			status <- http.StatusOK
 			return nil
@@ -47,13 +50,9 @@ func AddTask(configObject config.ContextObject) http.HandlerFunc {
 		taskDescription := strings.Join(req.Form["task"], "")
 		priority := strings.Join(req.Form["priority"], "")
 		status := make(chan int, 1)
+		configureHystrix()
 
-		hystrix.ConfigureCommand("addTask", hystrix.CommandConfig{
-			Timeout: TIMEOUT,
-			MaxConcurrentRequests: MAXCONCURRENTREQUESTS,
-			ErrorPercentThreshold: ERRORPERCENTTHRESHOLD,
-		})
-		hystrix.Go("addTask", func() error {
+		hystrix.Go("task", func() error {
 			err := models.Add(configObject,taskDescription,priority)
 			if err == nil {
 				status <-http.StatusAccepted
@@ -71,12 +70,8 @@ func AddTask(configObject config.ContextObject) http.HandlerFunc {
 func DeleteTask(configObject config.ContextObject) http.HandlerFunc{
 	return func(res http.ResponseWriter, req *http.Request) {
 		status := make(chan int, 1)
-		hystrix.ConfigureCommand("deleteTask", hystrix.CommandConfig{
-			Timeout: TIMEOUT,
-			MaxConcurrentRequests: MAXCONCURRENTREQUESTS,
-			ErrorPercentThreshold: ERRORPERCENTTHRESHOLD,
-		})
-		hystrix.Go("deleteTask", func() error {
+		configureHystrix()
+		hystrix.Go("task", func() error {
 			err := models.Delete(configObject,req.URL.Path)
 			if err == nil {
 				status <-http.StatusAccepted
@@ -90,47 +85,17 @@ func DeleteTask(configObject config.ContextObject) http.HandlerFunc{
 	}
 }
 
-func UpdateTaskPriority(configObject config.ContextObject) http.HandlerFunc{
-	return func(res http.ResponseWriter, req *http.Request) {
-		req.ParseForm()
-		taskId := strings.Join(req.Form["taskId"], "")
-		priority := strings.Join(req.Form["priority"], "")
-
-		status := make(chan int, 1)
-
-		hystrix.ConfigureCommand("updateTaskPriority", hystrix.CommandConfig{
-			Timeout: TIMEOUT,
-			MaxConcurrentRequests: MAXCONCURRENTREQUESTS,
-			ErrorPercentThreshold: ERRORPERCENTTHRESHOLD,
-		})
-		hystrix.Go("updateTaskPriority", func() error {
-			err := models.UpdatePriority(configObject,taskId,priority)
-			if err == nil {
-				status <-http.StatusAccepted
-			}
-			return nil
-		}, func(err error) error {
-			status <- http.StatusBadRequest
-			return nil
-		})
-		res.WriteHeader(<-status)
-	}
-}
-
-
-func UpdateTaskDescription(configObject config.ContextObject) http.HandlerFunc {
+func UpdateTask(configObject config.ContextObject) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		req.ParseForm()
 		taskId := strings.Join(req.Form["taskId"], "")
 		data := strings.Join(req.Form["data"], "")
+		priority := strings.Join(req.Form["priority"], "")
 		status := make(chan int, 1)
-		hystrix.ConfigureCommand("updateTaskDescription", hystrix.CommandConfig{
-			Timeout: TIMEOUT,
-			MaxConcurrentRequests: MAXCONCURRENTREQUESTS,
-			ErrorPercentThreshold: ERRORPERCENTTHRESHOLD,
-		})
-		hystrix.Go("updateTaskPriority", func() error {
-			err := models.UpdateDescription(configObject,taskId,data)
+		configureHystrix()
+
+		hystrix.Go("task", func() error {
+			err := models.Update(configObject,taskId,data,priority)
 			if err == nil {
 				status <-http.StatusAccepted
 			}
@@ -152,12 +117,8 @@ func UploadTaskFromCsv(configObject config.ContextObject) http.HandlerFunc {
 		defer file.Close()
 		data,err := ioutil.ReadAll(file)
 		status := make(chan int, 1)
-		hystrix.ConfigureCommand("uploadCsv", hystrix.CommandConfig{
-			Timeout: TIMEOUT,
-			MaxConcurrentRequests: MAXCONCURRENTREQUESTS,
-			ErrorPercentThreshold: ERRORPERCENTTHRESHOLD,
-		})
-		hystrix.Go("uploadCsv", func() error {
+		configureHystrix()
+		hystrix.Go("task", func() error {
 			err := models.AddTaskByCsv(configObject,string(data))
 			if err == nil {
 				status <-http.StatusAccepted
