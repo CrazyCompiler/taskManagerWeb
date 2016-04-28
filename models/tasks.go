@@ -2,54 +2,34 @@ package models
 
 import (
 	"taskManagerWeb/config"
-	"net/http"
-	"io/ioutil"
 	"taskManagerWeb/errorHandler"
-	"github.com/golang/protobuf/proto"
-	"bytes"
 	"strconv"
 	"github.com/taskManagerContract"
-	"fmt"
+	"taskManagerWeb/serviceCall"
 )
 
-func Get(configObject config.ContextObject) []byte {
-	request, err := http.NewRequest("GET", "http://"+configObject.ServerAddress + "/tasks", nil)
-	client := &http.Client{}
-	resp, err := client.Do(request)
-	if err != nil {
-		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-		return nil
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-	}
-	return  body
+func Get(configObject config.ContextObject) ([]byte,error) {
+	method := "GET"
+	url := "http://"+configObject.ServerAddress + "/tasks"
+	data,err:= serviceCall.Make(configObject,method,url,nil)
+	return  data,err
 }
 
 func Add(configObject config.ContextObject,task string, priority string)error {
-	data := &contract.Task{}
-	data.Task = &task
-	data.Priority = &priority
-	dataToBeSend,err :=  proto.Marshal(data)
-	if err != nil {
-		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-	}
-	request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress+"/task",bytes.NewBuffer(dataToBeSend))
-	if err != nil {
-		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-	}
-	client := &http.Client{}
-	resp, err := client.Do(request)
-	fmt.Println(resp)
-	return  err
+	dataToSend := &contract.Task{}
+	dataToSend.Task = &task
+	dataToSend.Priority = &priority
+
+	method := "POST"
+	url := "http://"+configObject.ServerAddress+"/task"
+	_,err := serviceCall.Make(configObject,method,url,dataToSend)
+	return err
 }
 
 func Delete(configObject config.ContextObject,URI string) error{
-	fmt.Println("http://"+configObject.ServerAddress + "/task"+URI)
-	request, err := http.NewRequest("DELETE", "http://"+configObject.ServerAddress +URI, nil)
-	client := &http.Client{}
-	_, err = client.Do(request)
+	method := "DELETE"
+	url := "http://"+configObject.ServerAddress +URI
+	_,err := serviceCall.Make(configObject,method,url,nil)
 	return err
 }
 
@@ -64,26 +44,17 @@ func Update(configObject config.ContextObject,taskId string, taskDescription str
 	data.Task = &taskDescription
 	data.Priority = &taskPriority
 
-	dataToBeSend,err :=  proto.Marshal(data)
-	if err != nil {
-		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-	}
-
-	request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress+"/update",bytes.NewBuffer(dataToBeSend))
-	client := &http.Client{}
-	_, err = client.Do(request)
-	return  err
+	method := "POST"
+	url := "http://"+configObject.ServerAddress+"/update"
+	_,err = serviceCall.Make(configObject,method,url,data)
+	return err
 }
 
 func AddTaskByCsv(configObject config.ContextObject, csvFileData string)error{
-	data := &contract.UploadCsvData{}
-	data.CsvData = &csvFileData
-	dataToBeSend,err :=  proto.Marshal(data)
-	if err != nil {
-		errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
-	}
-	request, err := http.NewRequest("POST", "http://"+configObject.ServerAddress + "/tasks/csv",bytes.NewBuffer(dataToBeSend))
-	client := &http.Client{}
-	_, err = client.Do(request)
-	return  err
+	data := &contract.Task{}
+	data.Task = &csvFileData
+	method := "POST"
+	url := "http://"+configObject.ServerAddress + "/tasks/csv"
+	_,err := serviceCall.Make(configObject,method,url,data)
+	return err
 }
