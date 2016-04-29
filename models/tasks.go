@@ -4,7 +4,7 @@ import (
 	"taskManagerWeb/config"
 	"taskManagerWeb/errorHandler"
 	"strconv"
-	"github.com/taskManagerContract"
+	"github.com/CrazyCompiler/taskManagerContract"
 	"taskManagerWeb/serviceCall"
 )
 

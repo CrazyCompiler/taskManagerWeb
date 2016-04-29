@@ -6,7 +6,7 @@ import (
 	"taskManagerWeb/errorHandler"
 	"net/http"
 	"taskManagerWeb/config"
-	"github.com/taskManagerContract"
+	"github.com/CrazyCompiler/taskManagerContract"
 	"github.com/golang/protobuf/proto"
 	"bytes"
 )

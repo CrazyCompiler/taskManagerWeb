@@ -7,6 +7,7 @@ import (
 	"taskManagerWeb/errorHandler"
 	"taskManagerWeb/routers"
 	"net/http"
+	"flag"
 )
 
 func main() {
@@ -19,14 +20,21 @@ func main() {
 	defer errorFile.Close()
 
 	configObject.ErrorLogFile = errorFile
-	configObject.ServerAddress = os.Args[2]
+
+	var serverAddressFlag = flag.String("sa","127.0.0.1:8080","listening to the service")
+	var portFlag = flag.String("p","8888","To which port it will listen")
+
+	flag.Parse()
+
+	configObject.ServerAddress = *serverAddressFlag
+	port := *portFlag
 
 	if err != nil {
 		errorHandler.ErrorHandler(configObject.ErrorLogFile, err)
 	}
 
 	routers.HandleRequests(configObject)
-	err = http.ListenAndServe(":"+os.Args[1], nil)
+	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		fmt.Println("their was error ", err)
 	}
