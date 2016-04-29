@@ -154,8 +154,28 @@ var uploadCsv = function(){
 
 }
 
+var convertIntoCsv = function(data){
+    convertedData = "";
+
+    rowData.forEach(function(each){
+        convertedData += each.TASKID+","+each.TASK+","+each.PRIORITY+"\n";
+    })
+    return convertedData;
+}
+
+var downloadCsv = function(){
+   $.get("/tasks","getAllTasks",function(data,status){
+   		if(status == "success"){
+               rowData = JSON.parse(data);
+               csvFormat = convertIntoCsv(rowData);
+               window.open('data:text/csv,' + encodeURIComponent(csvFormat));
+   		}
+   	});
+}
+
 $(document).ready(function(){
     $(".add").click(addTask);
-    $("form#csvUploader").submit(uploadCsv)
+    $("form#csvUploader").submit(uploadCsv);
+    $(".csv").click(downloadCsv);
     getTaskLists();
 })

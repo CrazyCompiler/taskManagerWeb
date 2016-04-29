@@ -1,6 +1,5 @@
 .container{
     text-align:center;
-
     margin: 0 auto;
 }
 
@@ -11,7 +10,7 @@
 
 .addTask{
     margin: 0 auto;
-    margin-top:5%;
+    margin-top:2%;
     text-align:center;
 
 }
@@ -32,4 +31,10 @@
     margin: 0 auto;
     margin-top:2%;
 
+}
+
+.download {
+    text-align:right;
+    margin:2%;
+    margin-right:21%;
 }
