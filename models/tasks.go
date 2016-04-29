@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"github.com/CrazyCompiler/taskManagerContract"
 	"taskManagerWeb/serviceCall"
+	"github.com/golang/protobuf/proto"
 )
 
 func Get(context config.Context) ([]byte,error) {
@@ -55,6 +56,15 @@ func AddTaskByCsv(context config.Context, csvFileData string)error{
 	data.Task = &csvFileData
 	method := "POST"
 	url := "http://"+context.ServerAddress + "/tasks/csv"
-	_,err := serviceCall.Make(context,method,url,data)
-	return err
+	bytesRecieved,err := serviceCall.Make(context,method,url,data)
+	dataRecieved := &contract.Response{}
+	err = proto.Unmarshal(bytesRecieved,dataRecieved)
+	if err != nil {
+		errorHandler.ErrorHandler(context.ErrorLogFile,err)
+		return err
+	}
+	//if dataRecieved.Err==nil {
+	//	return dataRecieved.Err.Description
+	//}
+	return nil
 }

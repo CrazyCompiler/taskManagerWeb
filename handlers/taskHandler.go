@@ -66,7 +66,8 @@ func UploadTaskFromCsv(context config.Context) http.HandlerFunc {
 		data,err := ioutil.ReadAll(file)
 		err = models.AddTaskByCsv(context,string(data))
 		if err != nil {
-			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+			return
 		}
 		res.WriteHeader(http.StatusAccepted)
 	}
