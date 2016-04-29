@@ -9,9 +9,9 @@ import (
 	"io/ioutil"
 )
 
-func GetTasks(configObject config.ContextObject) http.HandlerFunc {
+func GetTasks(context config.Context) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
-		data,err := models.Get(configObject)
+		data,err := models.Get(context)
 		if err != nil {
 			res.WriteHeader(http.StatusInternalServerError)
 		}
@@ -19,12 +19,12 @@ func GetTasks(configObject config.ContextObject) http.HandlerFunc {
 	}
 }
 
-func AddTask(configObject config.ContextObject) http.HandlerFunc {
+func AddTask(context config.Context) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		req.ParseForm()
 		taskDescription := strings.Join(req.Form["task"], "")
 		priority := strings.Join(req.Form["priority"], "")
-		err := models.Add(configObject,taskDescription,priority)
+		err := models.Add(context,taskDescription,priority)
 		if err != nil {
 			res.WriteHeader(http.StatusInternalServerError)
 		}
@@ -32,9 +32,9 @@ func AddTask(configObject config.ContextObject) http.HandlerFunc {
 	}
 }
 
-func DeleteTask(configObject config.ContextObject) http.HandlerFunc{
+func DeleteTask(context config.Context) http.HandlerFunc{
 	return func(res http.ResponseWriter, req *http.Request) {
-		err := models.Delete(configObject,req.URL.Path)
+		err := models.Delete(context,req.URL.Path)
 		if err != nil {
 			res.WriteHeader(http.StatusInternalServerError)
 		}
@@ -42,13 +42,13 @@ func DeleteTask(configObject config.ContextObject) http.HandlerFunc{
 	}
 }
 
-func UpdateTask(configObject config.ContextObject) http.HandlerFunc {
+func UpdateTask(context config.Context) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		req.ParseForm()
 		taskId := strings.Join(req.Form["taskId"], "")
 		data := strings.Join(req.Form["data"], "")
 		priority := strings.Join(req.Form["priority"], "")
-		err := models.Update(configObject,taskId,data,priority)
+		err := models.Update(context,taskId,data,priority)
 		if err != nil {
 			res.WriteHeader(http.StatusInternalServerError)
 		}
@@ -56,15 +56,15 @@ func UpdateTask(configObject config.ContextObject) http.HandlerFunc {
 	}
 }
 
-func UploadTaskFromCsv(configObject config.ContextObject) http.HandlerFunc {
+func UploadTaskFromCsv(context config.Context) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		file,_,err := req.FormFile("uploadFile")
 		if err != nil {
-			errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
+			errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		}
 		defer file.Close()
 		data,err := ioutil.ReadAll(file)
-		err = models.AddTaskByCsv(configObject,string(data))
+		err = models.AddTaskByCsv(context,string(data))
 		if err != nil {
 			res.WriteHeader(http.StatusInternalServerError)
 		}

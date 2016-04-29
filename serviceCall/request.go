@@ -6,7 +6,7 @@ import (
 	"taskManagerWeb/errorHandler"
 	"net/http"
 	"taskManagerWeb/config"
-	"github.com/taskManagerContract"
+	"github.com/CrazyCompiler/taskManagerContract"
 	"github.com/golang/protobuf/proto"
 	"bytes"
 )
@@ -24,7 +24,7 @@ func configureHystrix(){
 }
 
 
-func Make(configObject config.ContextObject ,method string, url string, data *contract.Task)([]byte,error){
+func Make(context config.Context,method string, url string, data *contract.Task)([]byte,error){
 	receiveData := make(chan []byte)
 	errorToReturn := make(chan error)
 	configureHystrix()
@@ -35,18 +35,18 @@ func Make(configObject config.ContextObject ,method string, url string, data *co
 
 		dataToBeSend,err :=  proto.Marshal(data)
 		if err != nil {
-			errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
+			errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		}
 		request, err := http.NewRequest(method,url, bytes.NewBuffer(dataToBeSend))
 		client := &http.Client{}
 		resp, err := client.Do(request)
 		if err != nil {
-			errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
+			errorHandler.ErrorHandler(context.ErrorLogFile,err)
 			return nil
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			errorHandler.ErrorHandler(configObject.ErrorLogFile,err)
+			errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		}
 		receiveData <- body
 		errorToReturn <- nil

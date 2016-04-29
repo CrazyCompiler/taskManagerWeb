@@ -4,7 +4,7 @@ import (
 	"os"
 )
 
-type ContextObject struct {
+type Context struct {
 	ErrorLogFile *os.File
 	ServerAddress string
 }
