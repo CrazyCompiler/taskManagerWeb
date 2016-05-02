@@ -8,7 +8,9 @@
       <root url="file://$PROJECT_DIR$/../taskManager" />
       <root url="file://$PROJECT_DIR$/../hello" />
       <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../taskManagerLogin" />
       <root url="file://$PROJECT_DIR$/../interfaces" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

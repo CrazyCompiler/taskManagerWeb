@@ -26,7 +26,7 @@ func main() {
 
 	flag.Parse()
 
-	context.ServerAddress = *serverAddressFlag
+	context.ServerAddress = "http://"+*serverAddressFlag
 	port := *portFlag
 
 	if err != nil {

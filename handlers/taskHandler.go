@@ -71,3 +71,14 @@ func UploadTaskFromCsv(context config.Context) http.HandlerFunc {
 		res.WriteHeader(http.StatusAccepted)
 	}
 }
+
+func DownloadCsv(context config.Context) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+		data,err := models.GetCsv(context)
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+		}
+		res.Header().Set("Content-Disposition","attachment; filename=task.csv")
+		res.Write(data)
+	}
+}
