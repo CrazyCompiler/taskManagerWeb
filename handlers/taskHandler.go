@@ -48,7 +48,7 @@ func DeleteTask(context config.Context) http.HandlerFunc{
 func UpdateTask(context config.Context) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		req.ParseForm()
-		taskId := strings.Join(req.Form["taskId"], "")
+		taskId := req.URL.Path
 		data := strings.Join(req.Form["data"], "")
 		priority := strings.Join(req.Form["priority"], "")
 		err := models.Update(context,taskId,data,priority)

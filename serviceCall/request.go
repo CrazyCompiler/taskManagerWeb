@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"taskManagerWeb/config"
 	"github.com/golang/protobuf/proto"
-	"github.com/taskManagerContract"
+	"github.com/CrazyCompiler/taskManagerContract"
 )
 
 const TIMEOUT int = 1000

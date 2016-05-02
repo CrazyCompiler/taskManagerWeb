@@ -1,5 +1,5 @@
 hash: 9b23aa482a3c50461ecef934ef54fa3fc17f6ca0b747aa66281d5ba358dd1df0
-updated: 2016-04-27T22:57:11.272709494+05:30
+updated: 2016-05-02T15:25:36.406336622+05:30
 imports:
 - name: github.com/afex/hystrix-go
   version: 9351b724be3950ef0ca82c53f817dcd33947e95e
@@ -8,7 +8,7 @@ imports:
   - hystrix/metric_collector
   - hystrix/rolling
 - name: github.com/CrazyCompiler/taskManagerContract
-  version: 6c5ac7cc8e9f8b8d943b9c55f74c9ef59d209a53
+  version: 883c70385c1a2a00e74f4bd1fd871d7322ec779e
 - name: github.com/golang/protobuf
   version: 7cc19b78d562895b13596ddce7aafb59dd789318
   subpackages:

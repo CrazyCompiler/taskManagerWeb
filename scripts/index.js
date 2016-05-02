@@ -3,7 +3,7 @@ var addTask = function(){
     var priority = $('#priority').val();
     if(task != ""){
         var data = "task="+task+"&priority="+priority;
-        $.post("/task",data,function(data,status){
+        $.post("/tasks",data,function(data,status){
             if(status == "success"){
                  getTaskLists();
             }
@@ -15,21 +15,17 @@ var addTask = function(){
 
 var setSelectionOptions = ['High','Medium','Low'];
 
-var updateTask = function(params){
-     data = "taskId="+params.data.TASKID+"&data="+params.newValue+"&priority="+params.data.PRIORITY;
-        $.post("/update",data,function(data,status){
-            if(status == "success"){
-                getTaskLists();
-            }
-        })
-}
+var updateTask = function(params,newPriority){
+     var priority = newPriority ||  params.data.PRIORITY;
+     var newTask =  params.newValue || params.data.TASK;
+     data = "data="+newTask+"&priority="+priority;
+    $.ajax({
+        url : '/tasks/'+params.data.TASKID,
+        data : data,
+        type : 'PATCH',
+        success:getTaskLists
+    });
 
-var updatePriority = function(params,dataToBeUpDated){
-    data = "taskId="+params.data.TASKID+"&data="+params.data.TASK+"&priority="+dataToBeUpDated;
-    $.post("/update",data,function(data,status){
-        if(status == "success"){
-        }
-    })
 }
 
 var customEditor = function(params) {
@@ -69,7 +65,7 @@ var customEditor = function(params) {
         if (editing) {
             editing = false;
             var newValue = eSelect.value;
-            updatePriority(params,newValue);
+            updateTask(params,newValue)
             params.data[params.colDef.field] = newValue;
             eLabel.nodeValue = newValue;
             eCell.removeChild(eSelect);

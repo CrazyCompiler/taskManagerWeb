@@ -3,12 +3,11 @@ package models
 import (
 	"taskManagerWeb/config"
 	"taskManagerWeb/errorHandler"
-	"strconv"
 	"taskManagerWeb/serviceCall"
-	"github.com/taskManagerContract"
 	"github.com/golang/protobuf/proto"
 	"bytes"
 	"net/http"
+	"github.com/CrazyCompiler/taskManagerContract"
 )
 
 func createNewRequest(method string, url string, data *contract.Task)(*http.Request,error)  {
@@ -24,7 +23,11 @@ func createNewRequest(method string, url string, data *contract.Task)(*http.Requ
 func Get(context config.Context) ([]byte,error) {
 	method := "GET"
 	url := context.ServerAddress + "/tasks"
-	requestToService,err := createNewRequest(method,url,nil);
+	requestToService,err := createNewRequest(method,url,nil)
+	if err != nil {
+		errorHandler.ErrorHandler(context.ErrorLogFile,err)
+		return nil,err
+	}
 	data,err:= serviceCall.Make(context,requestToService)
 	return  data,err
 }
@@ -34,8 +37,8 @@ func Add(context config.Context,task string, priority string)error {
 	data.Task = &task
 	data.Priority = &priority
 	method := "POST"
-	url := context.ServerAddress+"/task"
-	requestToService,err := createNewRequest(method,url,data);
+	url := context.ServerAddress+"/tasks"
+	requestToService,err := createNewRequest(method,url,data)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		return err
@@ -47,7 +50,7 @@ func Add(context config.Context,task string, priority string)error {
 func Delete(context config.Context,URI string) error{
 	method := "DELETE"
 	url := context.ServerAddress +URI
-	requestToService,err := createNewRequest(method,url,nil);
+	requestToService,err := createNewRequest(method,url,nil)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		return err
@@ -57,20 +60,13 @@ func Delete(context config.Context,URI string) error{
 }
 
 func Update(context config.Context,taskId string, taskDescription string, taskPriority string)error {
-	id,err := strconv.Atoi(taskId)
-	convertedTaskId := int32(id)
-	if err != nil {
-		errorHandler.ErrorHandler(context.ErrorLogFile,err)
-	}
 	data := &contract.Task{}
-	data.TaskId = &convertedTaskId
 	data.Task = &taskDescription
 	data.Priority = &taskPriority
 
-	method := "POST"
-	url := context.ServerAddress+"/update"
-
-	requestToService,err := createNewRequest(method,url,data);
+	method := "PATCH"
+	url := context.ServerAddress+taskId
+	requestToService,err := createNewRequest(method,url,data)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		return err
@@ -84,7 +80,7 @@ func AddTaskByCsv(context config.Context, csvFileData string)error{
 	data.Task = &csvFileData
 	method := "POST"
 	url := context.ServerAddress + "/tasks/csv"
-	requestToService,err := createNewRequest(method,url,data);
+	requestToService,err := createNewRequest(method,url,data)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		return err
@@ -96,7 +92,7 @@ func AddTaskByCsv(context config.Context, csvFileData string)error{
 func GetCsv(context config.Context)([]byte,error){
 	method := "GET"
 	url := context.ServerAddress + "/tasks/download/csv"
-	requestToService,err := createNewRequest(method,url,nil);
+	requestToService,err := createNewRequest(method,url,nil)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		return []byte(""),err
