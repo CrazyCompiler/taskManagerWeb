@@ -19,7 +19,6 @@ func Add(context config.Context,task string, priority string)error {
 	dataToSend := &contract.Task{}
 	dataToSend.Task = &task
 	dataToSend.Priority = &priority
-
 	method := "POST"
 	url := context.ServerAddress+"/task"
 	_,err := serviceCall.Make(context,method,url,dataToSend)

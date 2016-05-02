@@ -36,19 +36,26 @@ func Make(context config.Context,method string, url string, data *contract.Task)
 		dataToBeSend,err :=  proto.Marshal(data)
 		if err != nil {
 			errorHandler.ErrorHandler(context.ErrorLogFile,err)
+			return err
 		}
 		request, err := http.NewRequest(method,url, bytes.NewBuffer(dataToBeSend))
 		client := &http.Client{}
 		resp, err := client.Do(request)
 		if err != nil {
 			errorHandler.ErrorHandler(context.ErrorLogFile,err)
-			return nil
+			return err
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			errorHandler.ErrorHandler(context.ErrorLogFile,err)
+			return  err
 		}
-		receiveData <- body
+		dataProvided := &contract.GetTasks{}
+		err = proto.Unmarshal(body,dataProvided)
+		if err != nil {
+			errorHandler.ErrorHandler(context.ErrorLogFile,err)
+		}
+		receiveData <- dataProvided.Bytedata
 		errorToReturn <- nil
 		return  nil
 	}, func(err error) error {
