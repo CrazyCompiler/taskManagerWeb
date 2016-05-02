@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"taskManagerWeb/config"
 	"github.com/golang/protobuf/proto"
-	"bytes"
 	"github.com/taskManagerContract"
 )
 
@@ -24,21 +23,11 @@ func configureHystrix(){
 }
 
 
-func Make(context config.Context,method string, url string, data *contract.Task)([]byte,error){
+func Make(context config.Context,request *http.Request)([]byte,error){
 	receiveData := make(chan []byte)
 	errorToReturn := make(chan error)
 	configureHystrix()
 	hystrix.Go("task", func() error {
-		if data == nil{
-			data = &contract.Task{}
-		}
-
-		dataToBeSend,err :=  proto.Marshal(data)
-		if err != nil {
-			errorHandler.ErrorHandler(context.ErrorLogFile,err)
-			return err
-		}
-		request, err := http.NewRequest(method,url, bytes.NewBuffer(dataToBeSend))
 		client := &http.Client{}
 		resp, err := client.Do(request)
 		if err != nil {

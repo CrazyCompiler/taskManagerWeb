@@ -6,29 +6,53 @@ import (
 	"strconv"
 	"taskManagerWeb/serviceCall"
 	"github.com/taskManagerContract"
+	"github.com/golang/protobuf/proto"
+	"bytes"
+	"net/http"
 )
+
+func createNewRequest(method string, url string, data *contract.Task)(*http.Request,error)  {
+	if data == nil{
+		data = &contract.Task{}
+	}
+
+	dataToBeSend,err :=  proto.Marshal(data)
+	request, err := http.NewRequest(method,url, bytes.NewBuffer(dataToBeSend))
+	return request,err;
+}
 
 func Get(context config.Context) ([]byte,error) {
 	method := "GET"
 	url := context.ServerAddress + "/tasks"
-	data,err:= serviceCall.Make(context,method,url,nil)
+	requestToService,err := createNewRequest(method,url,nil);
+	data,err:= serviceCall.Make(context,requestToService)
 	return  data,err
 }
 
 func Add(context config.Context,task string, priority string)error {
-	dataToSend := &contract.Task{}
-	dataToSend.Task = &task
-	dataToSend.Priority = &priority
+	data := &contract.Task{}
+	data.Task = &task
+	data.Priority = &priority
 	method := "POST"
 	url := context.ServerAddress+"/task"
-	_,err := serviceCall.Make(context,method,url,dataToSend)
+	requestToService,err := createNewRequest(method,url,data);
+	if err != nil {
+		errorHandler.ErrorHandler(context.ErrorLogFile,err)
+		return err
+	}
+	_,err = serviceCall.Make(context,requestToService)
 	return err
 }
 
 func Delete(context config.Context,URI string) error{
 	method := "DELETE"
 	url := context.ServerAddress +URI
-	_,err := serviceCall.Make(context,method,url,nil)
+	requestToService,err := createNewRequest(method,url,nil);
+	if err != nil {
+		errorHandler.ErrorHandler(context.ErrorLogFile,err)
+		return err
+	}
+	_,err = serviceCall.Make(context,requestToService)
 	return err
 }
 
@@ -45,7 +69,13 @@ func Update(context config.Context,taskId string, taskDescription string, taskPr
 
 	method := "POST"
 	url := context.ServerAddress+"/update"
-	_,err = serviceCall.Make(context,method,url,data)
+
+	requestToService,err := createNewRequest(method,url,data);
+	if err != nil {
+		errorHandler.ErrorHandler(context.ErrorLogFile,err)
+		return err
+	}
+	_,err = serviceCall.Make(context,requestToService)
 	return err
 }
 
@@ -54,13 +84,23 @@ func AddTaskByCsv(context config.Context, csvFileData string)error{
 	data.Task = &csvFileData
 	method := "POST"
 	url := context.ServerAddress + "/tasks/csv"
-	_,err := serviceCall.Make(context,method,url,data)
+	requestToService,err := createNewRequest(method,url,data);
+	if err != nil {
+		errorHandler.ErrorHandler(context.ErrorLogFile,err)
+		return err
+	}
+	_,err = serviceCall.Make(context,requestToService)
 	return err
 }
 
 func GetCsv(context config.Context)([]byte,error){
 	method := "GET"
 	url := context.ServerAddress + "/tasks/download/csv"
-	data,err:= serviceCall.Make(context,method,url,nil)
+	requestToService,err := createNewRequest(method,url,nil);
+	if err != nil {
+		errorHandler.ErrorHandler(context.ErrorLogFile,err)
+		return []byte(""),err
+	}
+	data,err:= serviceCall.Make(context,requestToService)
 	return  data,err
 }
