@@ -39,12 +39,12 @@ func Make(context config.Context,request *http.Request)([]byte,error){
 			errorHandler.ErrorHandler(context.ErrorLogFile,err)
 			return  err
 		}
-		dataProvided := &contract.GetTasks{}
+		dataProvided := &contract.Response{}
 		err = proto.Unmarshal(body,dataProvided)
 		if err != nil {
 			errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		}
-		receiveData <- dataProvided.Bytedata
+		receiveData <-dataProvided.Data
 		errorToReturn <- nil
 		return  nil
 	}, func(err error) error {
