@@ -8,6 +8,7 @@ import (
 	"taskManagerWeb/config"
 	"github.com/golang/protobuf/proto"
 	"github.com/CrazyCompiler/taskManagerContract"
+	"errors"
 )
 
 const TIMEOUT int = 1000
@@ -45,7 +46,13 @@ func Make(context config.Context,request *http.Request)([]byte,error){
 			errorHandler.ErrorHandler(context.ErrorLogFile,err)
 		}
 		receiveData <-dataProvided.Data
-		errorToReturn <- nil
+		if dataProvided.Err == nil{
+			errorToReturn <- nil
+			return nil
+		}
+		if dataProvided.Err != nil{
+			errorToReturn <- errors.New(*dataProvided.Err.Description)
+		}
 		return  nil
 	}, func(err error) error {
 		receiveData <- nil
