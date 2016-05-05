@@ -2,11 +2,9 @@ package main
 
 import (
 	"os"
-	"fmt"
 	"taskManagerWeb/config"
 	"taskManagerWeb/errorHandler"
 	"taskManagerWeb/routers"
-	"net/http"
 	"flag"
 )
 
@@ -33,10 +31,6 @@ func main() {
 		errorHandler.ErrorHandler(context.ErrorLogFile, err)
 	}
 
-	routers.HandleRequests(context)
-	err = http.ListenAndServe(":"+port, nil)
-	if err != nil {
-		fmt.Println("their was error ", err)
-	}
+	routers.HandleRequests(context,port)
 
 }

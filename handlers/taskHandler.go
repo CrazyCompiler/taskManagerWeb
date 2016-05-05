@@ -7,11 +7,31 @@ import (
 	"strings"
 	"taskManagerWeb/errorHandler"
 	"io/ioutil"
+	"github.com/codegangsta/negroni"
+	"taskManagerWeb/tokenValidator"
+	"fmt"
 )
+
+func Auth(context config.Context) negroni.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+		cookie,err := req.Cookie("taskManagerToken")
+		if err != nil {
+			http.Redirect(res,req,"http://localhost:9999",http.StatusTemporaryRedirect)
+			return
+		}
+		if !(tokenValidator.IsValidToken(cookie.Value,req)){
+			http.Redirect(res,req,"http://localhost:9999",http.StatusTemporaryRedirect)
+			return
+		}
+		next( res,req)
+		return
+	}
+}
 
 func GetTasks(context config.Context) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
-		data,err := models.Get(context)
+		cookie,err := req.Cookie("taskManagerId")
+		data,err := models.Get(context,cookie.Value)
 		if err != nil {
 			http.Error(res, "Internal Server Error", http.StatusInternalServerError)
 			return

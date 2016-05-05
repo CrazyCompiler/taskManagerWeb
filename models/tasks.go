@@ -20,9 +20,9 @@ func createNewRequest(method string, url string, data *contract.Task)(*http.Requ
 	return request,err;
 }
 
-func Get(context config.Context) ([]byte,error) {
+func Get(context config.Context,userId string) ([]byte,error) {
 	method := "GET"
-	url := context.ServerAddress + "/tasks"
+	url := context.ServerAddress + "/tasks/"+userId
 	requestToService,err := createNewRequest(method,url,nil)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
@@ -91,7 +91,7 @@ func AddTaskByCsv(context config.Context, csvFileData string)error{
 
 func GetCsv(context config.Context)([]byte,error){
 	method := "GET"
-	url := context.ServerAddress + "/tasks/download/csv"
+	url := context.ServerAddress + "/tasks/csv"
 	requestToService,err := createNewRequest(method,url,nil)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
