@@ -120,7 +120,7 @@ var getTaskLists = function(player){
 var deleteTask = function(params){
     var dataToBeSend = {taskId:params.data.TASKID};
       $.ajax({
-        url: "/task/"+params.data.TASKID,
+        url: "/tasks/"+params.data.TASKID,
         type: 'DELETE',
         data: dataToBeSend,
         traditional: true,

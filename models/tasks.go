@@ -32,12 +32,12 @@ func Get(context config.Context,userId string) ([]byte,error) {
 	return  data,err
 }
 
-func Add(context config.Context,task string, priority string)error {
+func Add(context config.Context,task string, priority string,userId string)error {
 	data := &contract.Task{}
 	data.Task = &task
 	data.Priority = &priority
 	method := "POST"
-	url := context.ServerAddress+"/tasks"
+	url := context.ServerAddress+"/tasks/"+userId
 	requestToService,err := createNewRequest(method,url,data)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
@@ -47,9 +47,9 @@ func Add(context config.Context,task string, priority string)error {
 	return err
 }
 
-func Delete(context config.Context,URI string) error{
+func Delete(context config.Context,URI string,userId string) error{
 	method := "DELETE"
-	url := context.ServerAddress +URI
+	url := context.ServerAddress +"/"+userId+URI
 	requestToService,err := createNewRequest(method,url,nil)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
@@ -59,13 +59,13 @@ func Delete(context config.Context,URI string) error{
 	return err
 }
 
-func Update(context config.Context,taskId string, taskDescription string, taskPriority string)error {
+func Update(context config.Context,taskId string, taskDescription string, taskPriority string,userId string)error {
 	data := &contract.Task{}
 	data.Task = &taskDescription
 	data.Priority = &taskPriority
 
 	method := "PATCH"
-	url := context.ServerAddress+taskId
+	url := context.ServerAddress+"/"+userId+taskId
 	requestToService,err := createNewRequest(method,url,data)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
@@ -75,11 +75,11 @@ func Update(context config.Context,taskId string, taskDescription string, taskPr
 	return err
 }
 
-func AddTaskByCsv(context config.Context, csvFileData string)error{
+func AddTaskByCsv(context config.Context, csvFileData string,userId string)error{
 	data := &contract.Task{}
 	data.Task = &csvFileData
 	method := "POST"
-	url := context.ServerAddress + "/tasks/csv"
+	url := context.ServerAddress + "/tasks/csv"+userId
 	requestToService,err := createNewRequest(method,url,data)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
@@ -89,9 +89,9 @@ func AddTaskByCsv(context config.Context, csvFileData string)error{
 	return err
 }
 
-func GetCsv(context config.Context)([]byte,error){
+func GetCsv(context config.Context,userId string)([]byte,error){
 	method := "GET"
-	url := context.ServerAddress + "/tasks/csv"
+	url := context.ServerAddress + "/tasks/csv"+userId
 	requestToService,err := createNewRequest(method,url,nil)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)

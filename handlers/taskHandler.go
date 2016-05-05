@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"github.com/codegangsta/negroni"
 	"taskManagerWeb/tokenValidator"
-	"fmt"
 )
 
 func Auth(context config.Context) negroni.HandlerFunc {
@@ -42,10 +41,11 @@ func GetTasks(context config.Context) http.HandlerFunc {
 
 func AddTask(context config.Context) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
+		cookie,err := req.Cookie("taskManagerId")
 		req.ParseForm()
 		taskDescription := strings.Join(req.Form["task"], "")
 		priority := strings.Join(req.Form["priority"], "")
-		err := models.Add(context,taskDescription,priority)
+		err = models.Add(context,taskDescription,priority,cookie.Value)
 		if err != nil {
 			http.Error(res, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -56,7 +56,8 @@ func AddTask(context config.Context) http.HandlerFunc {
 
 func DeleteTask(context config.Context) http.HandlerFunc{
 	return func(res http.ResponseWriter, req *http.Request) {
-		err := models.Delete(context,req.URL.Path)
+		cookie,err := req.Cookie("taskManagerId")
+		err = models.Delete(context,req.URL.Path,cookie.Value)
 		if err != nil {
 			http.Error(res, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -71,7 +72,8 @@ func UpdateTask(context config.Context) http.HandlerFunc {
 		taskId := req.URL.Path
 		data := strings.Join(req.Form["data"], "")
 		priority := strings.Join(req.Form["priority"], "")
-		err := models.Update(context,taskId,data,priority)
+		cookie,err := req.Cookie("taskManagerId")
+		err = models.Update(context,taskId,data,priority,cookie.Value)
 		if err != nil {
 			res.WriteHeader(http.StatusInternalServerError)
 			http.Error(res, "Internal Server Error", http.StatusInternalServerError)
@@ -89,7 +91,8 @@ func UploadTaskFromCsv(context config.Context) http.HandlerFunc {
 		}
 		defer file.Close()
 		data,err := ioutil.ReadAll(file)
-		err = models.AddTaskByCsv(context,string(data))
+		cookie,err := req.Cookie("taskManagerId")
+		err = models.AddTaskByCsv(context,string(data),cookie.Value)
 		if err != nil {
 			res.Write([]byte(err.Error()))
 			http.Error(res, "Internal Server Error", http.StatusInternalServerError)
@@ -101,7 +104,8 @@ func UploadTaskFromCsv(context config.Context) http.HandlerFunc {
 
 func DownloadCsv(context config.Context) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
-		data,err := models.GetCsv(context)
+		cookie,err := req.Cookie("taskManagerId")
+		data,err := models.GetCsv(context,cookie.Value)
 		if err != nil {
 			http.Error(res, "Internal Server Error", http.StatusInternalServerError)
 			return
