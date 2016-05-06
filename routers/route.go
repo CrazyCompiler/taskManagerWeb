@@ -16,7 +16,7 @@ func HandleRequests(context config.Context,port string) {
 	r.HandleFunc("/tasks/{id:[0-9]+}", handlers.DeleteTask(context)).Methods("DELETE")
 	r.HandleFunc("/tasks", handlers.GetTasks(context)).Methods("GET")
 	r.HandleFunc("/tasks", handlers.AddTask(context)).Methods("POST")
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./")))
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public")))
 	http.Handle("/", r)
 
 	n := negroni.Classic()
