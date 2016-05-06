@@ -19,12 +19,12 @@ func main() {
 
 	context.ErrorLogFile = errorFile
 
-	var serverAddressFlag = flag.String("sa","127.0.0.1:8080","listening to the service")
+	var serverAddressFlag = flag.String("sa","http://taskmanager.localhost.com/service/","listening to the service")
 	var portFlag = flag.String("p","8888","To which port it will listen")
 
 	flag.Parse()
 
-	context.ServerAddress = "http://"+*serverAddressFlag
+	context.ServerAddress = *serverAddressFlag
 	port := *portFlag
 
 	if err != nil {

@@ -3,7 +3,7 @@ var addTask = function(){
     var priority = $('#priority').val();
     if(task != ""){
         var data = "task="+task+"&priority="+priority;
-        $.post("/tasks",data,function(data,status){
+        $.post("/web/tasks",data,function(data,status){
             if(status == "success"){
                  getTaskLists();
             }
@@ -20,7 +20,7 @@ var updateTask = function(params,newPriority){
      var newTask =  params.newValue || params.data.TASK;
      data = "data="+newTask+"&priority="+priority;
     $.ajax({
-        url : '/tasks/'+params.data.TASKID,
+        url : '/web/tasks/'+params.data.TASKID,
         data : data,
         type : 'PATCH',
         success:getTaskLists
@@ -105,8 +105,8 @@ var displayData = function(data){
             gridOptions.api.sizeColumnsToFit();
 }
 
-var getTaskLists = function(player){
-	$.get("/tasks","getAllTasks",function(data,status){
+var getTaskLists = function(){
+	$.get("/web/tasks","",function(data,status){
 		if(status == "success"){
             rowData = JSON.parse(data);
             rowData.forEach(function(each){
@@ -120,7 +120,7 @@ var getTaskLists = function(player){
 var deleteTask = function(params){
     var dataToBeSend = {taskId:params.data.TASKID};
       $.ajax({
-        url: "/tasks/"+params.data.TASKID,
+        url: "/web/tasks/"+params.data.TASKID,
         type: 'DELETE',
         data: dataToBeSend,
         traditional: true,
@@ -134,7 +134,7 @@ var deleteTask = function(params){
 var uploadCsv = function(){
     var formData = new FormData($(this)[0]);
      $.ajax({
-            url: "tasks/csv",
+            url: "/web/tasks/csv",
             type: 'POST',
             data: formData,
             async: false,
@@ -142,7 +142,8 @@ var uploadCsv = function(){
                 if(data)
                     alert(data)
                 else
-                    alert("File has been uploaded")
+                    alert("file uploaded")
+
             },
             contentType: false,
             processData: false

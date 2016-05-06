@@ -15,11 +15,11 @@ func Auth(context config.Context) negroni.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 		cookie,err := req.Cookie("taskManagerToken")
 		if err != nil {
-			http.Redirect(res,req,"http://localhost:9999",http.StatusTemporaryRedirect)
+			http.Redirect(res,req,"auth",http.StatusTemporaryRedirect)
 			return
 		}
 		if !(tokenValidator.IsValidToken(cookie.Value,req)){
-			http.Redirect(res,req,"http://localhost:9999",http.StatusTemporaryRedirect)
+			http.Redirect(res,req,"auth",http.StatusTemporaryRedirect)
 			return
 		}
 		next( res,req)
@@ -99,6 +99,7 @@ func UploadTaskFromCsv(context config.Context) http.HandlerFunc {
 			return
 		}
 		res.WriteHeader(http.StatusAccepted)
+
 	}
 }
 
