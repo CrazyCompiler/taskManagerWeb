@@ -49,7 +49,7 @@ func Add(context config.Context,task string, priority string,userId string)error
 
 func Delete(context config.Context,URI string,userId string) error{
 	method := "DELETE"
-	url := context.ServerAddress +"/"+userId+URI
+	url := context.ServerAddress+userId+URI
 	requestToService,err := createNewRequest(method,url,nil)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)
