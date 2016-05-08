@@ -65,7 +65,8 @@ func Update(context config.Context,taskId string, taskDescription string, taskPr
 	data.Priority = &taskPriority
 
 	method := "PATCH"
-	url := context.ServerAddress+"/"+userId+taskId
+	url := context.ServerAddress+userId+taskId
+
 	requestToService,err := createNewRequest(method,url,data)
 	if err != nil {
 		errorHandler.ErrorHandler(context.ErrorLogFile,err)

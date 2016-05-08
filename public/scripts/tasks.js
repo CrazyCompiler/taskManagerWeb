@@ -32,9 +32,11 @@ var customEditor = function(params) {
     var editing = false;
     var eCell = document.createElement('span');
     var eLabel = document.createTextNode(params.value);
+
     eCell.appendChild(eLabel);
 
     var eSelect = document.createElement("select");
+
 
     setSelectionOptions.forEach(function(item) {
         var eOption = document.createElement("option");
@@ -84,18 +86,17 @@ var gridOptions = {
     enableFilter: true,
     enableColResize: true,
     rowHeight:40,
-    rowSelection: 'multiple'
-
+    headerHeight:45,
 };
 
 var rowData;
 
 var displayData = function(data){
             $('.todoList').html("");
-             var columnDefs = [{headerName: "Task_Id",field: "TASKID",width:100},
+             var columnDefs = [
+                                {headerName: "" , field: "delete" , width:100 ,onCellClicked : deleteTask},
                                 {headerName: "Task Description", field: "TASK",width:600,editable: true, newValueHandler: updateTask},
-                                {headerName: "Priority" , field: "PRIORITY", cellRenderer: customEditor,width : 100},
-                                {headerName: "" , field: "delete" , width:100 ,onCellClicked : deleteTask}
+                                {headerName: "Priority" , field: "PRIORITY", cellRenderer: customEditor,width : 100}
                             ];
 
             gridOptions.columnDefs =  columnDefs;
@@ -110,7 +111,7 @@ var getTaskLists = function(){
 		if(status == "success"){
             rowData = JSON.parse(data);
             rowData.forEach(function(each){
-                each.delete = " <td><div class='deleteTask' id="+each.TASKID+ "> ✗ </div>"
+                each.delete = ' <td><img src="/web/images/dustbin2.jpeg" id='+each.TASKID+' class="deleteTask" alt="delete">'
             })
             displayData(data);
 		}

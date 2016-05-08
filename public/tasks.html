@@ -11,39 +11,38 @@
 
 </head>
 <body>
-        <div class="container">
-            <div class = "title">
-                <h1>Welcome to Task Manager</h1>
-                <br>
-                <h3>Store your ideas here securely, and never forget anything</h3>
-            </div>
-
-            <div class="download">
-                <a href="tasks/csv" class="csv">Download As Csv</a>
-            </div>
-
-
-            <div class="todoList ag-fresh">
-
-            </div>
+    <div class="header">
+       <div class="title">Task Manager</div>
+    </div>
+    <div class="container">
 
             <div class="addTask">
-                    Task:<input type="text" name="task" id="task" >
-                    Priority: <select name="priority" id="priority">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-                <button class="add" value="Add Task"> Add Task</button>
+                <input type="text" name="task" id="task" placeholder="Task Description">
+                <select name="priority" id="priority">
+                <option label="Priority" selected value="low" >Option Group</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+                <button class="button add" value="Add Task"> Add Task</button>
+            </div>
+
+            <div class="Or">
+                OR
             </div>
 
             <div class="uploadCsv">
-                <!--<form enctype="multipart/form-data" action="uploadCsv" method="post">-->
                 <form id="csvUploader" enctype="multipart/form-data" action="#" method="post">
-                    <input type="file" name="uploadFile" />
+                    <input type="file" name="uploadFile" class="fileUpload" />
                     <input type="hidden" name="token" value="{{.}}"/>
-                    <input type="submit" value="upload" />
+                    <input type="submit" value="upload" class="button" />
                 </form>
+            </div>
+
+
+            <div class="todoList ag-fresh"></div>
+            <div class="download">
+                <a href="tasks/csv" class="downloadCsv">Download As Csv</a>
             </div>
 
         </div>

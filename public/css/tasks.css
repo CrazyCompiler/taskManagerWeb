@@ -1,45 +1,139 @@
+body{
+    background:#f7f7f7;
+}
+
+input[type=text]{
+    text-align:center;
+}
+
 .container{
+    padding:10px;
+    background:white;
     text-align:center;
     margin: 0 auto;
+    width:50%;
+    margin-right:25%;
+}
+
+.header{
+    margin:-10px;
+    margin-bottom:-32px;
+    background: #d96459;
+    height:120px;
+    color:white;
+    font-size:30px;
+    text-align:center;
 }
 
 .title{
-    text-align:center;
-
-}
-
-.addTask{
-    margin: 0 auto;
-    margin-top:2%;
-    text-align:center;
-
+    padding:20px;
 }
 
 .todoList{
     text-align:center;
-    width:900px;
     height:500px;
-    margin-left:25%;
 }
 
-.deleteTask{
-    cursor:pointer
+.addTask{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+input[type=text],select{
+    width: 60%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size:15px;
+    color:#F5A9A9;
+    background:#f7f7f7;
+}
+
+::-webkit-input-placeholder {
+   color: #F5A9A9;
+}
+
+select{
+    width:20%;
+    height:45px;
+}
+
+.button {
+    width: 19%;
+    background-color: #d96459;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size:15px;
+
+}
+
+.button:hover {
+    background-color: #F78181;
+}
+
+input[type=submit]:hover {
+    background-color: #F78181;
 }
 
 .uploadCsv{
-    width:30%;
-    margin: 0 auto;
-    margin-top:2%;
-
+    margin-bottom:10px;
 }
 
-.download {
-    text-align:right;
-    margin:2%;
-    margin-right:21%;
+.fileUpload{
+    width: 80%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size:15px;
 }
 
-.csv{
+.download{
+    margin-top:30px;
+    background: #d96459;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+}
+
+.download a{
+    font-size:20px;
+    cursor: pointer;
     text-decoration:none;
+    color:white;
+}
+
+.download:hover {
+    background-color: #F78181;
+}
+
+.deleteTask{
+    width:30px;
+    height:30px;
+}
+
+.Or{
+    color: #d96459;
+    font-size:20px;
+}
+
+input[type=file]{
+    font-size:15px;
+    color:#F5A9A9;
+    background:#f7f7f7;
+}
+
+.ag-header-row{
+    font-size:18px;
+    padding-top:8px;
+    color:#d96459;
 
 }
