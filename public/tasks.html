@@ -14,6 +14,9 @@
     <div class="header">
        <div class="title">Task Manager</div>
     </div>
+    <div class="logout">
+        <a href="/logout">logout</a>
+    </div>
     <div class="container">
 
             <div class="addTask">
@@ -33,7 +36,12 @@
 
             <div class="uploadCsv">
                 <form id="csvUploader" enctype="multipart/form-data" action="#" method="post">
-                    <input type="file" name="uploadFile" class="fileUpload" />
+                    <div class="fileUpload-container">
+                        <input type="file" name="uploadFile" class="fileUpload" data-multiple-caption="{count} files selected" multiple="" >
+                        <label>
+                            <span>Choose a file</span>
+                        </label>
+                    </div>
                     <input type="hidden" name="token" value="{{.}}"/>
                     <input type="submit" value="upload" class="button" />
                 </form>

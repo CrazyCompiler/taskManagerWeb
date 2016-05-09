@@ -75,6 +75,12 @@ var customEditor = function(params) {
         }
     });
 
+    if(params.data.PRIORITY == "low" || params.data.PRIORITY == "Low")
+        eCell.setAttribute("style", "color:green");
+    if(params.data.PRIORITY == "Medium" || params.data.PRIORITY == "medium")
+        eCell.setAttribute("style", "color:orange");
+    if(params.data.PRIORITY == "high" || params.data.PRIORITY == "High")
+        eCell.setAttribute("style", "color:red");
     return eCell;
 }
 
@@ -151,6 +157,7 @@ var uploadCsv = function(){
         });
 
 }
+
 
 $(document).ready(function(){
     $(".add").click(addTask);
