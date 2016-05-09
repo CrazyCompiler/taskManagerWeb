@@ -158,9 +158,16 @@ var uploadCsv = function(){
 
 }
 
+var upload = function(){
+    $("input[type=file]").on("click", function(e){
+       e.stopPropagation();
+    })
+    $("input.fileUpload").click();
+}
 
 $(document).ready(function(){
     $(".add").click(addTask);
     $("form#csvUploader").submit(uploadCsv);
+    $(".fileUpload-container").click(upload);
     getTaskLists();
 })

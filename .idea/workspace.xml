@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b04b935f-760a-45e3-9664-17d64f1e83ef" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/taskManagerWeb" afterPath="$PROJECT_DIR$/taskManagerWeb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handlers/taskHandler.go" afterPath="$PROJECT_DIR$/handlers/taskHandler.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/tasks.css" afterPath="$PROJECT_DIR$/public/css/tasks.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/scripts/tasks.js" afterPath="$PROJECT_DIR$/public/scripts/tasks.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/tasks.html" afterPath="$PROJECT_DIR$/public/tasks.html" />
     </list>
     <ignored path="taskManagerWeb.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="tasks.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="tasks.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/scripts/tasks.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="164" column="0" selection-start-line="164" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.8292683">
+              <caret line="164" column="4" selection-start-line="164" selection-start-column="4" selection-end-line="164" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -41,8 +37,8 @@
       <file leaf-file-name="tasks.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/tasks.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.4482758">
-              <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
+            <state vertical-scroll-proportion="-17.241379">
+              <caret line="40" column="31" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -58,11 +54,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tasks.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tasks.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/css/tasks.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.75609756">
-              <caret line="176" column="17" selection-start-line="176" selection-start-column="17" selection-end-line="176" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -121,11 +117,11 @@
         <option value="$PROJECT_DIR$/public/css/index.css" />
         <option value="$PROJECT_DIR$/public/scripts/index.js" />
         <option value="$PROJECT_DIR$/models/tasks.go" />
-        <option value="$PROJECT_DIR$/public/scripts/tasks.js" />
         <option value="$PROJECT_DIR$/routers/route.go" />
         <option value="$PROJECT_DIR$/handlers/taskHandler.go" />
         <option value="$PROJECT_DIR$/public/tasks.html" />
         <option value="$PROJECT_DIR$/public/css/tasks.css" />
+        <option value="$PROJECT_DIR$/public/scripts/tasks.js" />
       </list>
     </option>
   </component>
@@ -940,14 +936,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routers/route.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/handlers/taskHandler.go">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -956,26 +944,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/scripts/tasks.js">
+    <entry file="file://$PROJECT_DIR$/public/tasks.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="164" column="0" selection-start-line="164" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
+        <state vertical-scroll-proportion="-17.241379">
+          <caret line="40" column="31" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/tasks.html">
+    <entry file="file://$PROJECT_DIR$/routers/route.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.4482758">
-          <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/css/tasks.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.75609756">
-          <caret line="176" column="17" selection-start-line="176" selection-start-column="17" selection-end-line="176" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/scripts/tasks.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8292683">
+          <caret line="164" column="4" selection-start-line="164" selection-start-column="4" selection-end-line="164" selection-end-column="4" />
           <folding />
         </state>
       </provider>
