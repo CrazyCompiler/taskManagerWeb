@@ -6,14 +6,16 @@ import (
 	"net/http"
 )
 
-func IsValidToken(myToken string,req *http.Request) bool{
-	_, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
+func IsValidToken(myToken string,req *http.Request) (string,bool){
+	data, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
 		key := "THToken"
 		decoded, _ :=base64.URLEncoding.DecodeString(key)
 		return decoded, nil
 	})
 	if err != nil {
-		return false
+		return "",false
 	}
-	return true
+	userId := data.Claims["Id"]
+
+	return userId.(string),true
 }

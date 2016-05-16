@@ -14,7 +14,6 @@ func createNewRequest(method string, url string, data *contract.Task)(*http.Requ
 	if data == nil{
 		data = &contract.Task{}
 	}
-
 	dataToBeSend,err :=  proto.Marshal(data)
 	request, err := http.NewRequest(method,url, bytes.NewBuffer(dataToBeSend))
 	return request,err;

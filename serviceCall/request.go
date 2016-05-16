@@ -9,6 +9,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/CrazyCompiler/taskManagerContract"
 	"errors"
+	"crypto/tls"
 )
 
 const TIMEOUT int = 1000
@@ -23,13 +24,16 @@ func configureHystrix(){
 	})
 }
 
-
 func Make(context config.Context,request *http.Request)([]byte,error){
 	receiveData := make(chan []byte)
 	errorToReturn := make(chan error)
 	configureHystrix()
 	hystrix.Go("task", func() error {
-		client := &http.Client{}
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		client := &http.Client{Transport: tr}
+
 		resp, err := client.Do(request)
 		if err != nil {
 			errorHandler.ErrorHandler(context.ErrorLogFile,err)
